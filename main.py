@@ -1,4 +1,5 @@
-import pygame, sys
+import pygame
+import sys
 from pygame.locals import *
 
 # Initializing Pygame
@@ -9,14 +10,15 @@ pygame.init()
 
 GAMEWINDOWWIDTH = 1920
 GAMEWINDOWHEIGHT = 1080
-GAMEWINDOW = pygame.display.set_mode((GAMEWINDOWWIDTH, GAMEWINDOWHEIGHT))
+GAMEWINDOW = pygame.display.set_mode((GAMEWINDOWWIDTH, GAMEWINDOWHEIGHT),FULLSCREEN | NOFRAME)
 pygame.display.set_caption('Tic Tac Toe')
 # ICON_SURFACE = pygame.image.load("32X32.png")
 # pygame.display.set_icon(ICON_SUFACE)
 
 def mainMenu():
+    GAMEWINDOW.fill((0, 0, 0))
     # Test BG image:
-    TESTBG = pygame.image.load("testBG.png")
+    TESTBG = pygame.image.load("testBG.png").convert()
     GAMEWINDOW.blit(TESTBG, (0, 0))
 
     # Buttons
