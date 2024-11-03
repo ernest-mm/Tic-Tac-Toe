@@ -1,16 +1,15 @@
 import pygame
 import sys
 from pygame.locals import *
-
+import displayResolution
 # Initializing Pygame
 
 pygame.init()
 
 # Creating the game window
 
-GAMEWINDOWWIDTH = 1920
-GAMEWINDOWHEIGHT = 1080
-GAMEWINDOW = pygame.display.set_mode((GAMEWINDOWWIDTH, GAMEWINDOWHEIGHT),FULLSCREEN | NOFRAME)
+GAMEWINDOWWIDTH, GAMEWINDOWHEIGHT = displayResolution.getDisplayDimensions()
+GAMEWINDOW = pygame.display.set_mode((GAMEWINDOWWIDTH, GAMEWINDOWHEIGHT), FULLSCREEN | NOFRAME)
 pygame.display.set_caption('Tic Tac Toe')
 # ICON_SURFACE = pygame.image.load("32X32.png")
 # pygame.display.set_icon(ICON_SUFACE)
