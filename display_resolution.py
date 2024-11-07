@@ -1,5 +1,4 @@
 import pygame
-import sys
 from typing import Optional
 from fractions import Fraction
 
@@ -13,18 +12,21 @@ def get_dimensions() -> tuple[int, int]:
     """
     pygame.init()
 
-    display_info = pygame.display.Info()
+    try:
+        display_info = pygame.display.Info()
 
-    # Check for errors
+        # Check for errors
 
-    if display_info.current_w == -1 or display_info.current_h == -1:
-        print("Error: Unable to retrieve display dimensions.")
+        if display_info.current_w == -1 or display_info.current_h == -1:
+            raise ValueError("Unable to retrieve display dimensions.")
+
+        width, height = display_info.current_w, display_info.current_h
+
+        return width, height
+    
+    finally:
         pygame.quit()
-        sys.exit()
 
-    else:
-        pygame.quit()
-        return display_info.current_w, display_info.current_h
 
 
 def get_supported_res(width: int, height: int, supported_displays: dict[tuple[int, int], str]) -> tuple[int, int]: 
@@ -65,16 +67,16 @@ def get_supported_res(width: int, height: int, supported_displays: dict[tuple[in
         return closest_res
     
     
-def is_factor(supported_displays: dict[tuple[int, int], str], developer_res: tuple[int, int]) -> bool:
+def is_factor(supported_displays: dict[tuple[int, int], str], development_resolution: tuple[int, int]) -> bool:
     for key in supported_displays.keys():
-        if developer_res[0] % key[0] != 0 or developer_res[1] % key[1] != 0:
+        if development_resolution[0] % key[0] != 0 or development_resolution[1] % key[1] != 0:
             return False
-        elif developer_res[0] // key[0] != developer_res[1] // key[1]:
+        elif development_resolution[0] // key[0] != development_resolution[1] // key[1]:
             return False
     return True
 
 
-def get_screen_infos(developer_res: tuple[int, int] = (3840, 2160)) -> dict:
+def get_screen_infos(development_resolution: tuple[int, int] = (3840, 2160)) -> dict:
     """
     Takes the width and the height of the resolution you're developping on.
     Returns a dictionary containing the informations that will be used in the pygame.display.set_mode() with the pygame.SCALED argument.
@@ -89,8 +91,8 @@ def get_screen_infos(developer_res: tuple[int, int] = (3840, 2160)) -> dict:
         }
     
     # Checking if every supported display resolution is a factor of the dev's display resolution
-    if is_factor(supported_displays, developer_res) == False:
-        return "Error: The developer's resolution should be a multiple of every supported display resolution"
+    if is_factor(supported_displays, development_resolution) == False:
+        raise ValueError("The developer's resolution should be a multiple of every supported display resolution")
 
     
     display_width, display_height = get_dimensions()
@@ -101,12 +103,12 @@ def get_screen_infos(developer_res: tuple[int, int] = (3840, 2160)) -> dict:
         "width": supported_res[0],
         "height": supported_res[1],
         "resolution": supported_displays[supported_res],
-        "scale": Fraction(1, developer_res[0]) * Fraction(supported_res[0], 1)
+        "scale": Fraction(1, development_resolution[0]) * Fraction(supported_res[0], 1)
     }
 
     return screen_infos
 
-def scaled(screen_infos: dict, width_or_height: int) -> int:
+def scaled_down(screen_infos: dict, width_or_height: int) -> int:
     """
     Takes a width or height in the developer's resolution and returns a value converted to the user's supported resolution
     """
