@@ -6,6 +6,13 @@ from fractions import Fraction
 # but it's hard to scale down all the sprites.
 # This script will chose what assets' resolution will be used in the game based on the user's display resolution.
 
+# Supported display resolutions (key == tuple of width and height, value == resolution name)
+supported_displays = {
+    (3840, 2160): "4k",
+    (1920, 1080): "1080p",
+    (1280, 720): "720p"
+    }
+
 def get_dimensions() -> tuple[int, int]:
     """
     Returns the user's display width and height.
@@ -67,10 +74,9 @@ def get_supported_res(width: int, height: int, supported_displays: dict[tuple[in
         return closest_res
     
 
-def is_factor(supported_displays: dict[tuple[int, int], str], development_resolution: tuple[int, int]) -> bool:
+def is_multiple(supported_displays: dict[tuple[int, int], str], development_resolution: tuple[int, int]) -> bool:
     """
-    Checks if the development_resolution is a factor of all resolutions in supported_displays.
-    A resolution is considered a factor if both dimensions are divisible and have the same aspect ratio.
+    Checks if the development_resolution is a multiple of all resolutions in supported_displays and have the same aspect ratio.
     """
     
     dev_width, dev_height = development_resolution
@@ -98,19 +104,11 @@ def get_screen_infos(development_resolution: tuple[int, int] = (3840, 2160)) -> 
         development_resolution (tuple[int, int]): The resolution the developer is working on. Default is 4K (3840x2160).
 
     Returns:
-        dict: A dictionary containing the supported resolution's width, height, resolution name, and scaling factor.
+        dict: A dictionary containing the supported resolution's size, width, height, resolution name, scaling factor and the development_resolution.
     """
-
-    # Supported display resolutions (key == tuple of width and height, value == resolution name)
-    supported_displays = {
-        (3840, 2160): "4K",
-        (1920, 1080): "1080p",
-        (1280, 720): "720p",
-        (768, 432): "432p"
-        }
     
-    # Checking if every supported display resolution is a factor of the dev's display resolution
-    if not is_factor(supported_displays, development_resolution):
+    # Checking if the developement resolution is a multiple of every supported display resolution.
+    if not is_multiple(supported_displays, development_resolution):
         raise ValueError(f"The developer's resolution {development_resolution} should be a multiple of every supported display resolution.")
 
     # Getting the display dimensions
@@ -123,30 +121,54 @@ def get_screen_infos(development_resolution: tuple[int, int] = (3840, 2160)) -> 
 
 
     screen_infos = {
+        "size": (supported_res[0], supported_res[1]),
         "width": supported_res[0],
         "height": supported_res[1],
         "resolution": supported_displays[supported_res],
-        "scale": scale
+        "scale": scale,
+        "development_resolution": development_resolution
     }
 
     return screen_infos
 
-def scaled_down(screen_infos: dict, value: int) -> int:
+def is_value_multiple(screen_infos: dict, value: int) -> bool:
+    """
+    Takes a value and check if that value is a multiple of every supported display resolution's scale factor.
+    """
+    development_resolution = screen_infos["development_resolution"]
+    scale_factors = []
+
+    for res in supported_displays.keys():
+        scale = Fraction(res[0], development_resolution[0])
+        scale_factors.append(scale)
+
+    for factor in scale_factors:
+        value_scaled = value * factor
+        if value_scaled.denominator != 1:
+            return False
+            
+    return True
+
+def scaled_down(value: int, screen_infos: dict = get_screen_infos()) -> int:
     """
     Takes a value (x, y, width, or height) in the developer's resolution and returns a value converted to the user's supported resolution.
     
     Args:
-        screen_infos (dict): A dictionary containing screen information, including the scale factor.
         value (int): A dimension (x, y, width, or height) in the developer's resolution.
+        (optional) screen_infos (dict): A dictionary containing screen information, including the scale factor.
 
     Returns:
         int: The scaled dimension according to the supported resolution.
     """
+
     scale = screen_infos["scale"]
 
     if scale == 0:
         raise ValueError("Scale factor cannot be zero.")
     
+    if not is_value_multiple(screen_infos, value):
+        raise ValueError("The value must be a multiple of every supported display resolution's scale factor.")
+
     scaled = int(value * scale)
 
     return scaled

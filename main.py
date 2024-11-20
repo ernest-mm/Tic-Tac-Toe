@@ -1,22 +1,73 @@
 import pygame
 import sys
-from pygame.locals import *
-import display_resolution
+from scripts.display_resolution import get_screen_infos, scaled_down
+from scripts.constants import *
+from scripts.rendering_scripts import render_paper
 
-pygame.init()
+class Game:
+    def __init__(self):
+        pygame.init()
 
-# Creating the screen and the game window
+        self.screen_infos = get_screen_infos(DEVELOPMENT_RESOLUTION)
+        self.screen = pygame.display.set_mode(self.screen_infos["size"], pygame.SCALED + pygame.FULLSCREEN + pygame.NOFRAME)
+        pygame.display.set_caption("Tic Tac Toe")
+        self.clock = pygame.time.Clock()
+        self.ICON = None
+        # pygame.display.set_icon(self.ICON)
 
-screen = pygame.display.set_mode(display_resolution.getDisplayDimensions(), FULLSCREEN + NOFRAME + SCALED)
-gameScreenInfos = display_resolution.getGameScreenInfos()
-gameScreen = pygame.Surface((gameScreenInfos["width"], gameScreenInfos["height"]))
+        # Creating the game surface
+        self.game_surface = pygame.Surface(self.screen_infos["size"])
 
-pygame.display.set_caption('Tic Tac Toe')
-# ICON_SURFACE = pygame.image.load("32X32.png")
-# # pygame.display.set_icon(ICON_SUFACE)
+    def main_menu(self):
+        render_paper(self.game_surface, self.screen_infos)
 
-clock = pygame.time.Clock()
+        # Creating the main menu sticky notes backgroung
 
+        background = pygame.image.load("assets/images/"+self.screen_infos["resolution"]+"_main_menu.png")
+        self.game_surface.blit(background, (0, 0))
+
+        pygame.font.init()
+        font = pygame.font.Font("assets/fonts/PatrickHand-Regular.ttf", scaled_down(198))
+        text = font.render("NEW GAME", True, BLACK)
+        text_w, text_h = text.get_size()
+        text_top_left = ((self.screen_infos["width"]//2)- text_w//2, scaled_down(1164))
+        self.game_surface.blit(text, text_top_left)
+
+        text = font.render("CREDITS", True, BLACK)
+        text_w, text_h = text.get_size()
+        text_top_left = ((self.screen_infos["width"]//2)- text_w//2, scaled_down(1416))
+        self.game_surface.blit(text, text_top_left)
+
+        text = font.render("QUIT", True, BLACK)
+        text_w, text_h = text.get_size()
+        text_top_left = ((self.screen_infos["width"]//2)- text_w//2, scaled_down(1668))
+        self.game_surface.blit(text, text_top_left)
+
+
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+            self.screen.blit(pygame.transform.scale(self.game_surface, self.screen_infos["size"]), (0, 0))
+            pygame.display.update()
+            self.clock.tick(FPS)
+
+    def run(self):
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+            self.screen.blit(pygame.transform.scale(self.game_surface, self.screen_infos["size"]), (0, 0))
+            pygame.display.update()
+            self.clock.tick(FPS)
+
+
+game = Game()
+game.main_menu()
 # def mainMenu():
 #     GAMEWINDOW.fill((0, 0, 0))
 #     # Test BG image:
