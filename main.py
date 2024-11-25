@@ -2,7 +2,7 @@ import pygame
 import sys
 from scripts.display_resolution import get_screen_infos, scaled_down
 from scripts.constants import *
-from scripts.rendering_scripts import render_paper, buttons_text, render_buttons_text
+from scripts.rendering_scripts import render_paper, buttons_text, render_buttons_text, render_back_button
 
 class Game:
     def __init__(self):
@@ -115,6 +115,11 @@ class Game:
     def run(self):
         render_paper(self.game_surface, self.screen_infos)
         while True:
+
+            mouse_pos = pygame.mouse.get_pos()
+
+            back_button_infos = render_back_button(self.game_surface, mouse_pos)
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -126,11 +131,21 @@ class Game:
 
     def credits_menu(self):
         render_paper(self.game_surface, self.screen_infos)
+
         while True:
+
+            mouse_pos = pygame.mouse.get_pos()
+
+            back_button_infos = render_back_button(self.game_surface, mouse_pos)
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    # Checking if the back button has been clicked on
+                    if back_button_infos["rect"].collidepoint(mouse_pos):
+                        return Game.main_menu(self)
 
             self.screen.blit(pygame.transform.scale(self.game_surface, self.screen_infos["size"]), (0, 0))
             pygame.display.update()
@@ -139,91 +154,3 @@ class Game:
 
 game = Game()
 game.main_menu()
-# def mainMenu():
-#     GAMEWINDOW.fill((0, 0, 0))
-#     # Test BG image:
-#     TESTBG = pygame.image.load("testBG.png").convert()
-#     GAMEWINDOW.blit(TESTBG, (0, 0))
-
-#     # Buttons
-#     NEWGAMEBUTTON = pygame.Rect(640, 450, 640, 90)
-#     OPTIONSBUTTON = pygame.Rect(640, 570, 640, 90)
-#     CREDITSBUTTON = pygame.Rect(640, 690, 640, 90)
-#     QUITBUTTON = pygame.Rect(640, 810, 640, 90)
-
-#     # The gameState variable will help us see which menu the program should be in
-#     gameState = None
-
-#     running = True
-
-#     while running:
-#         pygame.draw.rect(GAMEWINDOW, (255, 0, 0), NEWGAMEBUTTON)
-#         pygame.draw.rect(GAMEWINDOW, (255, 0, 0), OPTIONSBUTTON)
-#         pygame.draw.rect(GAMEWINDOW, (255, 0, 0), CREDITSBUTTON)
-#         pygame.draw.rect(GAMEWINDOW, (255, 0, 0), QUITBUTTON)
-
-#         # Checking if the mouse is on our buttons
-
-#         mousePos = pygame.mouse.get_pos()
-
-#         if NEWGAMEBUTTON.collidepoint(mousePos):
-#            pygame.draw.rect(GAMEWINDOW, (135, 0, 0), NEWGAMEBUTTON)
-#         if OPTIONSBUTTON.collidepoint(mousePos):
-#             pygame.draw.rect(GAMEWINDOW, (135, 0, 0), OPTIONSBUTTON)
-#         if CREDITSBUTTON.collidepoint(mousePos):
-#             pygame.draw.rect(GAMEWINDOW, (135, 0, 0), CREDITSBUTTON)
-#         if QUITBUTTON.collidepoint(mousePos):
-#             pygame.draw.rect(GAMEWINDOW, (135, 0, 0), QUITBUTTON)
-
-#         for event in pygame.event.get():
-#             if event.type == QUIT:
-#                 pygame.quit()
-#                 sys.exit()
-#             if event.type == MOUSEBUTTONDOWN:
-#                 # Checking what button has been clicked on
-#                 if NEWGAMEBUTTON.collidepoint(mousePos):
-#                     gameState = game()
-#                     running = False
-#                 elif OPTIONSBUTTON.collidepoint(mousePos):
-#                     gameState = options()
-#                     running = False
-#                 elif CREDITSBUTTON.collidepoint(mousePos):
-#                     gameState = credits()
-#                     running = False
-#                 elif QUITBUTTON.collidepoint(mousePos):
-#                     pygame.quit()
-#                     sys.exit()
-
-#         pygame.display.update()
-    
-#     return gameState()
-
-# def game():
-#     while True:
-#         GAMEWINDOW.fill("black")
-#         for event in pygame.event.get():
-#             if event.type == QUIT:
-#                 pygame.quit()
-#                 sys.exit()
-#         pygame.display.update()
-
-# def options():
-#     while True:
-#         GAMEWINDOW.fill("black")
-#         for event in pygame.event.get():
-#             if event.type == QUIT:
-#                 pygame.quit()
-#                 sys.exit()
-#         pygame.display.update()
-
-# def credits():
-#     while True:
-#         GAMEWINDOW.fill("black")
-#         for event in pygame.event.get():
-#             if event.type == QUIT:
-#                 pygame.quit()
-#                 sys.exit()
-#         pygame.display.update()
-
-# if __name__ == '__main__':
-#     mainMenu()

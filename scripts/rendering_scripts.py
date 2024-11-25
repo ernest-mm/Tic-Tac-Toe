@@ -60,3 +60,38 @@ def render_buttons_text(text_infos: dict, surface: pygame.Surface) -> pygame.Sur
     surface.blit(text_infos["text"], text_infos["top_left"])
 
     return surface
+
+def render_back_button(surface: pygame.Surface, mouse_pos: tuple) -> dict:
+    """
+    This function will render a 'back' button text on a postit on the bottom left of the screen,
+    and will return the back button informations.
+    """
+    postit = pygame.Rect(scaled_down(120), scaled_down(1680), scaled_down(480), scaled_down(360))
+
+    pygame.draw.rect(surface, POSTIT_RED, postit)
+
+    back_button_infos = buttons_text(FONT_PATH, scaled_down(198), "BACK", BLACK, True)
+
+    # Calculating the back button text top left to make it in the center of our postit.
+
+    back_button_infos["top_left"] = (scaled_down(120) + (scaled_down(480) - back_button_infos["width"])//2, 
+                                     scaled_down(1680) + (scaled_down(360) - back_button_infos["height"])//2)
+    back_button_infos["rect"] = pygame.Rect(back_button_infos["top_left"][0], back_button_infos["top_left"][1],
+                                                        back_button_infos["width"], back_button_infos["height"]
+                                        )
+    
+    if back_button_infos["rect"].collidepoint(mouse_pos):
+        back_button_infos = buttons_text(FONT_PATH, scaled_down(198), "BACK", BLACK, True, True)
+        back_button_infos["top_left"] = (scaled_down(120) + (scaled_down(480) - back_button_infos["width"])//2, 
+                                     scaled_down(1680) + (scaled_down(360) - back_button_infos["height"])//2)
+        back_button_infos["rect"] = pygame.Rect(back_button_infos["top_left"][0], back_button_infos["top_left"][1],
+                                                        back_button_infos["width"], back_button_infos["height"]
+                                        )
+        render_buttons_text(back_button_infos, surface)
+    else:
+        # Erasing the bold text first
+        pygame.draw.rect(surface, POSTIT_RED, back_button_infos["rect"])
+
+        render_buttons_text(back_button_infos, surface)
+
+    return back_button_infos
