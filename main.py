@@ -2,7 +2,7 @@ import pygame
 import sys
 from scripts.display_resolution import get_screen_infos, scaled_down
 from scripts.constants import *
-from scripts.rendering_scripts import render_paper, buttons_text, render_buttons_text, render_back_button
+from scripts.rendering_scripts import render_paper, render_new_game_button, render_credits_button, render_quit_button, render_back_button, render_x_and_o_scores, render_turn
 
 class Game:
     def __init__(self):
@@ -27,73 +27,14 @@ class Game:
         self.game_surface.blit(background, (0, 0))
 
         while True:
-            # Creating the text buttons, checking if the mouse is hovering over them and rendering accordingly
+            # Creating the text buttons
 
             mouse_pos = pygame.mouse.get_pos()
 
-            # New game button
+            new_game_button_infos = render_new_game_button(self.game_surface, self.screen_infos, mouse_pos)
+            credits_button_infos = render_credits_button(self.game_surface, self.screen_infos, mouse_pos)
+            quit_button_infos = render_quit_button(self.game_surface, self.screen_infos, mouse_pos)
 
-            new_game_button_infos = buttons_text(FONT_PATH, scaled_down(198), "NEW GAME", BLACK, True)
-            new_game_button_infos["top_left"] = ((self.screen_infos["width"]//2)- new_game_button_infos["width"]//2, scaled_down(1164))
-            new_game_button_infos["rect"] = pygame.Rect(new_game_button_infos["top_left"][0], new_game_button_infos["top_left"][1],
-                                                        new_game_button_infos["width"], new_game_button_infos["height"]
-                                        )
-            
-            if new_game_button_infos["rect"].collidepoint(mouse_pos):
-                new_game_button_infos = buttons_text(FONT_PATH, scaled_down(198), "NEW GAME", BLACK, True, True)
-                new_game_button_infos["top_left"] = ((self.screen_infos["width"]//2)- new_game_button_infos["width"]//2, scaled_down(1164))
-                new_game_button_infos["rect"] = pygame.Rect(new_game_button_infos["top_left"][0], new_game_button_infos["top_left"][1],
-                                                        new_game_button_infos["width"], new_game_button_infos["height"]
-                                        )
-                render_buttons_text(new_game_button_infos, self.game_surface)
-            else:
-                # Erasing the bold text first
-                pygame.draw.rect(self.game_surface, POSTIT_BLUE, new_game_button_infos["rect"])
-
-                render_buttons_text(new_game_button_infos, self.game_surface)
-
-            # Credits button
-
-            credits_button_infos = buttons_text(FONT_PATH, scaled_down(198), "CREDITS", BLACK, True)
-            credits_button_infos["top_left"] = ((self.screen_infos["width"]//2)- credits_button_infos["width"]//2, scaled_down(1416))
-            credits_button_infos["rect"] = pygame.Rect(credits_button_infos["top_left"][0], credits_button_infos["top_left"][1],
-                                                        credits_button_infos["width"], credits_button_infos["height"]
-                                        )
-            
-            if credits_button_infos["rect"].collidepoint(mouse_pos):
-                credits_button_infos = buttons_text(FONT_PATH, scaled_down(198), "CREDITS", BLACK, True, True)
-                credits_button_infos["top_left"] = ((self.screen_infos["width"]//2)- credits_button_infos["width"]//2, scaled_down(1416))
-                credits_button_infos["rect"] = pygame.Rect(credits_button_infos["top_left"][0], credits_button_infos["top_left"][1],
-                                                        credits_button_infos["width"], credits_button_infos["height"]
-                                        )
-                render_buttons_text(credits_button_infos, self.game_surface)
-            else:
-                # Erasing the bold text first
-                pygame.draw.rect(self.game_surface, POSTIT_BLUE, credits_button_infos["rect"])
-
-                render_buttons_text(credits_button_infos, self.game_surface)
-
-            # Quit button
-
-            quit_button_infos = buttons_text(FONT_PATH, scaled_down(198), "QUIT", BLACK, True)
-            quit_button_infos["top_left"] = ((self.screen_infos["width"]//2)- quit_button_infos["width"]//2, scaled_down(1668))
-            quit_button_infos["rect"] = pygame.Rect(quit_button_infos["top_left"][0], quit_button_infos["top_left"][1],
-                                                        quit_button_infos["width"], quit_button_infos["height"]
-                                        )
-            
-            if quit_button_infos["rect"].collidepoint(mouse_pos):
-                quit_button_infos = buttons_text(FONT_PATH, scaled_down(198), "QUIT", BLACK, True, True)
-                quit_button_infos["top_left"] = ((self.screen_infos["width"]//2)- quit_button_infos["width"]//2, scaled_down(1668))
-                quit_button_infos["rect"] = pygame.Rect(quit_button_infos["top_left"][0], quit_button_infos["top_left"][1],
-                                                        quit_button_infos["width"], quit_button_infos["height"]
-                                        )
-                render_buttons_text(quit_button_infos, self.game_surface)
-            else:
-                # Erasing the bold text first
-                pygame.draw.rect(self.game_surface, POSTIT_BLUE, quit_button_infos["rect"])
-
-                render_buttons_text(quit_button_infos, self.game_surface)
-            
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -114,16 +55,30 @@ class Game:
 
     def run(self):
         render_paper(self.game_surface, self.screen_infos)
+
+        x_score = 0
+        o_score = 0
+        player_turn = "X's"
+
         while True:
 
             mouse_pos = pygame.mouse.get_pos()
 
             back_button_infos = render_back_button(self.game_surface, mouse_pos)
 
+            render_x_and_o_scores(self.game_surface, self.screen_infos, x_score, o_score)
+
+            render_turn(self.screen_infos, self.game_surface, player_turn)
+
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    # Checking if the back button has been clicked on
+                    if back_button_infos["rect"].collidepoint(mouse_pos):
+                        return Game.main_menu(self)
 
             self.screen.blit(pygame.transform.scale(self.game_surface, self.screen_infos["size"]), (0, 0))
             pygame.display.update()
