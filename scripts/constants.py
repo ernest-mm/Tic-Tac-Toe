@@ -4,6 +4,8 @@ DEVELOPMENT_RESOLUTION = (3840, 2160)
 
 FONT_PATH = "assets/fonts/PatrickHand-Regular.ttf"
 
+LINE_SIZE = 6
+
 # Colors
 
 BLACK = (0, 0, 0)
@@ -13,3 +15,10 @@ LIGHT_BLUE = (160, 200, 255)
 POSTIT_BLUE = (54, 182, 255)
 POSTIT_RED = (255, 76, 76)
 RED = (255, 0, 0)
+
+# Game board coordinates
+
+GAMEBOARD_TOP_LEFT_X = 1200
+GAMEBOARD_TOP_LEFT_Y = 480
+GAMEBOARD_W_AND_H = 1440
+INSIDE_RECT_W_AND_H = int(GAMEBOARD_W_AND_H//3)

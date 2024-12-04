@@ -10,7 +10,7 @@ def render_paper(surface: pygame.Surface, screen_infos: dict) -> pygame.Surface:
     
     # Drawing the marging
 
-    pygame.draw.line(surface, LIGHT_RED, (scaled_down(240), 0), (scaled_down(240), screen_infos["width"]), scaled_down(6))
+    pygame.draw.line(surface, LIGHT_RED, (scaled_down(240), 0), (scaled_down(240), screen_infos["width"]), scaled_down(LINE_SIZE))
 
     # Drawing the lines
 
