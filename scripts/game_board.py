@@ -6,7 +6,7 @@ class Game_board:
     def __init__(self, surface: pygame.Surface):
         self.surface = surface
 
-    def render_square(self, color: tuple, top_left_x: int, top_left_y: int, width_and_height: int) -> None:
+    def render_square_boarder(self, color: tuple, top_left_x: int, top_left_y: int, width_and_height: int) -> None:
         """
         Render a square on the screen.
         WARNING: Integer values (except for color values) should be scaled down.
@@ -55,7 +55,7 @@ class Game_board:
         """
 
         # Rendering the square
-        self.render_square(color, scaled_down(GAMEBOARD_TOP_LEFT_X), scaled_down(GAMEBOARD_TOP_LEFT_Y), scaled_down(GAMEBOARD_W_AND_H))
+        self.render_square_boarder(color, scaled_down(GAMEBOARD_TOP_LEFT_X), scaled_down(GAMEBOARD_TOP_LEFT_Y), scaled_down(GAMEBOARD_W_AND_H))
 
         # Rendering the vertical inside lines (from left to right)
         pygame.draw.line(
@@ -93,7 +93,7 @@ class Game_board:
     def get_board_matrix(self) -> dict:
         """
         Return a dictionary containing all the 9X9 rects objects.
-        The keys are the a tuple of row and column (row: int, column: int).
+        The keys are the a string tuple of row and column (row, column).
         The values are a tuple (Rect: pygame.Rect, (top_left_x, top_left_y): tuple)
         """
 
@@ -135,7 +135,7 @@ class Game_board:
             top_left_x, top_left_y = board_matrix[key][1]
 
             if rect.collidepoint(mouse_pos):
-                self.render_square(RED, top_left_x, top_left_y, scaled_down(INSIDE_RECT_W_AND_H))
+                self.render_square_boarder(RED, top_left_x, top_left_y, scaled_down(INSIDE_RECT_W_AND_H))
                 return (key, (top_left_x, top_left_y))
 
         return None
