@@ -1,4 +1,5 @@
 import pygame
+import random
 from scripts.display_resolution import get_screen_infos, scaled_down
 from scripts.constants import *
 
@@ -165,3 +166,30 @@ def render_turn(screen_infos: dict, surface: pygame.Surface, turn: str) -> None:
     render_text(turn_text_infos, surface)
 
     return None
+
+def won_msg(surface: pygame.Surface, winner: str, screen_infos: dict, msg_size: int, tie: bool = False):
+    """
+    Will render a won message at the center of the screen.
+    """
+    msg = f"{winner[0]} HAS WON"
+
+    if winner == "X's":
+        postit_color = POSTIT_RED
+    elif winner == "O's":
+        postit_color = POSTIT_BLUE
+    else:
+        postit_color = RED
+        msg = winner
+
+    won_msg = get_text_object(FONT_PATH, msg_size, msg, BLACK, True)
+    won_msg_x, won_msg_y = (screen_infos["width"] - won_msg["width"])//2, (screen_infos["height"] - won_msg["height"])//2
+    won_msg["top_left"] = (won_msg_x, won_msg_y)
+
+    msg_postit_w = won_msg["width"] + scaled_down(48)
+    msg_postit_h = won_msg["height"] + scaled_down(36)
+    msg_postit_x, msg_postit_y = won_msg_x - scaled_down(48//2), won_msg_y - scaled_down(36//2)
+
+    msg_postit = pygame.Rect(msg_postit_x, msg_postit_y, msg_postit_w, msg_postit_h)
+
+    pygame.draw.rect(surface, postit_color, msg_postit)
+    render_text(won_msg, surface)

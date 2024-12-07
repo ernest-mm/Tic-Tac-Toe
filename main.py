@@ -22,6 +22,13 @@ class Game:
         # Creating the game board
         self.game_board = Game_board(self.game_surface)
 
+        # Initial position of the 'X' and 'O' text surfaces
+        self.x_text_x_pos = None
+        self.x_text_y_pos = None
+
+        self.o_text_x_pos = None
+        self.o_text_y_pos = None
+
         # Creating a matrix that will store the results
         self.results = [
             [str(), str(), str()],
@@ -29,6 +36,11 @@ class Game:
             [str(), str(), str()]
         ]
 
+        # Creating a set that will stores boxes that have been clicked on
+        self.clicked_on = set()
+
+        # Initial turn
+        self.player_turn = "X's"
 
     def check_for_winner(self):
         # Check all rows for a winner
@@ -49,6 +61,33 @@ class Game:
 
         # If no winner, return None
         return None
+    
+    def reset_game(self):
+        """
+        Reset the game without impacting the score.
+        """
+        # Clearing the screen
+        render_paper(self.game_surface, self.screen_infos)
+
+        # Going back to the initial position of the text surfaces
+        self.x_text_x_pos = None
+        self.x_text_y_pos = None
+
+        self.o_text_x_pos = None
+        self.o_text_y_pos = None
+
+        # Clearing the matrix that will store the results
+        self.results = [
+            [str(), str(), str()],
+            [str(), str(), str()],
+            [str(), str(), str()]
+        ]
+
+        # Clearing the set that will stores boxes that have been clicked on
+        self.clicked_on = set()
+
+        # Restarting the turn
+        self.player_turn = "X's"
 
     
     def main_menu(self):
@@ -87,12 +126,13 @@ class Game:
             self.clock.tick(FPS)
 
     def run(self):
+        # Reseting the game to earase previous values
+        self.reset_game()  
+
         render_paper(self.game_surface, self.screen_infos)
 
         x_score = 0
         o_score = 0
-
-        player_turn = "X's"
 
         # Creating 'X' and 'O' text and their surfaces
         x_text = get_text_object(FONT_PATH, scaled_down(INSIDE_RECT_W_AND_H), "X", POSTIT_RED, True)
@@ -105,50 +145,38 @@ class Game:
         # Bliting the text to their surfaces
         x_text_surf.blit(pygame.transform.scale(x_text["text"], (scaled_down(INSIDE_RECT_W_AND_H), scaled_down(INSIDE_RECT_W_AND_H))), (0, 0))
         o_text_surf.blit(pygame.transform.scale(o_text["text"], (scaled_down(INSIDE_RECT_W_AND_H), scaled_down(INSIDE_RECT_W_AND_H))), (0, 0))
-
-        # Initial position of the text surfaces
-        x_text_x_pos = None
-        x_text_y_pos = None
-
-        o_text_x_pos = None
-        o_text_y_pos = None
-
-        # Creating a set that will stores boxes that have been clicked on
-        clicked_on = set()
+        
 
         while True:
-            # Checking if the game has been won
+            # Blitting the 'X' and 'O' Surfaces to the screen
+            if self.x_text_x_pos != None and self.x_text_y_pos != None:
+                self.game_surface.blit(x_text_surf, (self.x_text_x_pos, self.x_text_y_pos))
+            if self.o_text_x_pos != None and self.o_text_y_pos != None:
+                self.game_surface.blit(o_text_surf, (self.o_text_x_pos, self.o_text_y_pos))
+
+            # Checking if the game has been won or if it's tied
             winner = self.check_for_winner()
 
-            if winner:
-                if winner == "X's":
-                    x_score += 1
-                elif winner == "O's":
-                    o_score += 1
-                # Reset game logic (clear board, etc.)
+            if (winner != None) or (len(self.clicked_on) >= 9):
+                if winner:
+                    if winner == "X's":
+                        x_score += 1
+                    elif winner == "O's":
+                        o_score += 1
+                else:
+                    winner = "THE GAME IS A TIE!"
+                    
+                # Winner's or tie message
+                won_msg(self.game_surface, winner, self.screen_infos, scaled_down(408))
 
-                # Clearing the screen
-                render_paper(self.game_surface, self.screen_infos)
+                self.screen.blit(pygame.transform.scale(self.game_surface, self.screen_infos["size"]), (0, 0))
+                pygame.display.update()
+                self.clock.tick(FPS)
 
-                # Going back to the initial position of the text surfaces
-                x_text_x_pos = None
-                x_text_y_pos = None
+                pygame.time.delay(3000)  # Winner's message lasts for 3 seconds 
 
-                o_text_x_pos = None
-                o_text_y_pos = None
-
-                # Clearing a matrix that will store the results
-                self.results = [
-                    [str(), str(), str()],
-                    [str(), str(), str()],
-                    [str(), str(), str()]
-                ]
-
-                # Creating a set that will stores boxes that have been clicked on
-                clicked_on = set()
-
-                # Restarting the turn
-                player_turn = "X's"          
+                # Reseting the game
+                self.reset_game()         
 
             mouse_pos = pygame.mouse.get_pos()
 
@@ -156,15 +184,9 @@ class Game:
 
             render_x_and_o_scores(self.game_surface, self.screen_infos, x_score, o_score)
 
-            render_turn(self.screen_infos, self.game_surface, player_turn)
+            render_turn(self.screen_infos, self.game_surface, self.player_turn)
 
             self.game_board.render(BLACK)
-
-            # Blitting the 'X' and 'O' Surfaces to the screen
-            if x_text_x_pos != None and x_text_y_pos != None:
-                self.game_surface.blit(x_text_surf, (x_text_x_pos, x_text_y_pos))
-            if o_text_x_pos != None and o_text_y_pos != None:
-                self.game_surface.blit(o_text_surf, (o_text_x_pos, o_text_y_pos))
 
             colliding_box = self.game_board.get_colliding_rect(mouse_pos)
 
@@ -178,36 +200,34 @@ class Game:
                         return Game.main_menu(self)
                     # Checking if a box from the game board has been clicked on
                     if colliding_box is not None:
-                        if player_turn == "X's":
-                            if colliding_box[0] in clicked_on:
+                        if self.player_turn == "X's":
+                            if colliding_box[0] in self.clicked_on:
                                 pass
                             else:
-                                x_text_x_pos = colliding_box[1][0]
-                                x_text_y_pos = colliding_box[1][1]
-                                clicked_on.add(colliding_box[0])
+                                self.x_text_x_pos = colliding_box[1][0]
+                                self.x_text_y_pos = colliding_box[1][1]
+                                self.clicked_on.add(colliding_box[0])
 
                                 # Putting the choice into the results' matrix
                                 row = int(colliding_box[0][1])
                                 column = int(colliding_box[0][4])
-                                self.results[row][column] = player_turn
+                                self.results[row][column] = self.player_turn
 
-                                player_turn = "O's"
+                                self.player_turn = "O's"
                         else:
-                            if colliding_box[0] in clicked_on:
+                            if colliding_box[0] in self.clicked_on:
                                 pass
                             else:
-                                o_text_x_pos = colliding_box[1][0]
-                                o_text_y_pos = colliding_box[1][1]
-                                clicked_on.add(colliding_box[0])
+                                self.o_text_x_pos = colliding_box[1][0]
+                                self.o_text_y_pos = colliding_box[1][1]
+                                self.clicked_on.add(colliding_box[0])
 
                                 # Putting the choice into the results' matrix
                                 row = int(colliding_box[0][1])
                                 column = int(colliding_box[0][4])
-                                self.results[row][column] = player_turn
+                                self.results[row][column] = self.player_turn
 
-                                player_turn = "X's"
-
-
+                                self.player_turn = "X's"
             
             self.screen.blit(pygame.transform.scale(self.game_surface, self.screen_infos["size"]), (0, 0))
             pygame.display.update()

@@ -15,6 +15,7 @@ LIGHT_BLUE = (160, 200, 255)
 POSTIT_BLUE = (54, 182, 255)
 POSTIT_RED = (255, 76, 76)
 RED = (255, 0, 0)
+WHITE = (255, 255, 255)
 
 # Game board coordinates
 
