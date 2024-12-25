@@ -1,5 +1,4 @@
 import pygame
-from typing import Optional
 from fractions import Fraction
 
 # pygame.SCALED can be used to easily scale up the display with a game surface blitted on it, 

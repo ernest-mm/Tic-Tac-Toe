@@ -2,10 +2,14 @@ FPS = 60
 
 DEVELOPMENT_RESOLUTION = (3840, 2160)
 
+# Paths
 FONT_PATH = "assets/fonts/PatrickHand-Regular.ttf"
+PAPER_SOUND_PATH = "assets/sounds/paper_flip.wav"
+PEN_WRITING_SOUND_PATH = "assets/sounds/pen_writing.mp3"
+
 
 LINE_SIZE = 6
-
+ 
 # Colors
 
 BLACK = (0, 0, 0)

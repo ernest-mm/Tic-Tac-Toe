@@ -1,6 +1,6 @@
 import pygame
 import random
-from scripts.display_resolution import get_screen_infos, scaled_down
+from scripts.display_resolution import scaled_down
 from scripts.constants import *
 
 def render_paper(surface: pygame.Surface, screen_infos: dict) -> pygame.Surface:
@@ -193,3 +193,7 @@ def won_msg(surface: pygame.Surface, winner: str, screen_infos: dict, msg_size: 
 
     pygame.draw.rect(surface, postit_color, msg_postit)
     render_text(won_msg, surface)
+
+    def render_credits_menu(screen_width: int, screen_height: int):
+       pass
+    

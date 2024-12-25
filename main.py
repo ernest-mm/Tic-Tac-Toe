@@ -3,18 +3,20 @@ import sys
 from scripts.display_resolution import get_screen_infos, scaled_down
 from scripts.constants import *
 from scripts.rendering_scripts import *
+from scripts.sounds import load_sound, play_sound
 from scripts.game_board import Game_board
 
 class Game:
     def __init__(self):
+        # Initialize Pygame
         pygame.init()
 
         self.screen_infos = get_screen_infos(DEVELOPMENT_RESOLUTION)
         self.screen = pygame.display.set_mode(self.screen_infos["size"], pygame.SCALED + pygame.FULLSCREEN + pygame.NOFRAME)
         pygame.display.set_caption("Tic Tac Toe")
         self.clock = pygame.time.Clock()
-        self.ICON = None
-        # pygame.display.set_icon(self.ICON)
+        self.ICON = pygame.image.load("assets/images/ICON.png")
+        pygame.display.set_icon(self.ICON)
 
         # Creating the game surface
         self.game_surface = pygame.Surface(self.screen_infos["size"])
@@ -41,6 +43,16 @@ class Game:
 
         # Initial turn
         self.player_turn = "X's"
+
+        # Loading the sounds
+        try:
+            self.paper_sound = load_sound(PAPER_SOUND_PATH)
+            self.pen_writing_sound = load_sound(PEN_WRITING_SOUND_PATH)
+        except (
+            load_sound(PAPER_SOUND_PATH) is None
+            or load_sound(PEN_WRITING_SOUND_PATH) is None
+        ):
+            raise TypeError("Failed to load pygame.mixer.Sound") 
 
     def check_for_winner(self):
         # Check all rows for a winner
@@ -114,10 +126,18 @@ class Game:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     # Checking what button has been clicked on
                     if new_game_button_infos["rect"].collidepoint(mouse_pos):
+                        # Playing the paper sound
+                        play_sound(self.paper_sound)
                         return Game.run(self)
                     if credits_button_infos["rect"].collidepoint(mouse_pos):
+                        # Playing the paper sound
+                        play_sound(self.paper_sound)
                         return Game.credits_menu(self)
                     if quit_button_infos["rect"].collidepoint(mouse_pos):
+                        # Playing the paper sound
+                        play_sound(self.paper_sound)
+                        # Waiting for the sound to finnish playing
+                        pygame.time.delay(831)
                         pygame.quit()
                         sys.exit()
 
@@ -165,6 +185,9 @@ class Game:
                         o_score += 1
                 else:
                     winner = "THE GAME IS A TIE!"
+
+                # Playing the paper sound
+                play_sound(self.paper_sound)
                     
                 # Winner's or tie message
                 won_msg(self.game_surface, winner, self.screen_infos, scaled_down(408))
@@ -197,6 +220,8 @@ class Game:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     # Checking if the back button has been clicked on
                     if back_button_infos["rect"].collidepoint(mouse_pos):
+                        # Playing the paper sound
+                        play_sound(self.paper_sound)
                         return Game.main_menu(self)
                     # Checking if a box from the game board has been clicked on
                     if colliding_box is not None:
@@ -207,6 +232,9 @@ class Game:
                                 self.x_text_x_pos = colliding_box[1][0]
                                 self.x_text_y_pos = colliding_box[1][1]
                                 self.clicked_on.add(colliding_box[0])
+
+                                # Playing the pen writing sound
+                                play_sound(self.pen_writing_sound)
 
                                 # Putting the choice into the results' matrix
                                 row = int(colliding_box[0][1])
@@ -221,6 +249,9 @@ class Game:
                                 self.o_text_x_pos = colliding_box[1][0]
                                 self.o_text_y_pos = colliding_box[1][1]
                                 self.clicked_on.add(colliding_box[0])
+
+                                # Playing the pen writing sound
+                                play_sound(self.pen_writing_sound)
 
                                 # Putting the choice into the results' matrix
                                 row = int(colliding_box[0][1])
@@ -249,12 +280,14 @@ class Game:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     # Checking if the back button has been clicked on
                     if back_button_infos["rect"].collidepoint(mouse_pos):
+                        # Playing the paper sound
+                        play_sound(self.paper_sound)
                         return Game.main_menu(self)
 
             self.screen.blit(pygame.transform.scale(self.game_surface, self.screen_infos["size"]), (0, 0))
             pygame.display.update()
             self.clock.tick(FPS)
 
-
-game = Game()
-game.main_menu()
+if __name__ == '__main__':
+    game = Game()
+    game.main_menu()
