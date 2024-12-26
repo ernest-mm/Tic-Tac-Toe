@@ -15,7 +15,7 @@ class Game:
         self.screen = pygame.display.set_mode(self.screen_infos["size"], pygame.SCALED + pygame.FULLSCREEN + pygame.NOFRAME)
         pygame.display.set_caption("Tic Tac Toe")
         self.clock = pygame.time.Clock()
-        self.ICON = pygame.image.load("assets/images/ICON.png")
+        self.ICON = pygame.image.load("src/assets/images/ICON.png")
         pygame.display.set_icon(self.ICON)
 
         # Creating the game surface
@@ -107,7 +107,7 @@ class Game:
 
         # Creating the main menu sticky notes backgroung
 
-        background = pygame.image.load("assets/images/"+self.screen_infos["resolution"]+"_main_menu.png")
+        background = pygame.image.load("src/assets/images/"+self.screen_infos["resolution"]+"_main_menu.png")
         self.game_surface.blit(background, (0, 0))
 
         while True:
