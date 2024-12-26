@@ -115,9 +115,8 @@ class Game:
 
             mouse_pos = pygame.mouse.get_pos()
 
-            new_game_button_infos = render_a_button(self.game_surface, "NEW GAME", scaled_down(1164), self.screen_infos, mouse_pos)
-            credits_button_infos = render_a_button(self.game_surface, "CREDITS", scaled_down(1416), self.screen_infos, mouse_pos)
-            quit_button_infos = render_a_button(self.game_surface, "QUIT", scaled_down(1668), self.screen_infos, mouse_pos)
+            new_game_button_infos = render_a_button(self.game_surface, "NEW GAME", scaled_down(1248), self.screen_infos, mouse_pos)
+            quit_button_infos = render_a_button(self.game_surface, "QUIT", scaled_down(1584), self.screen_infos, mouse_pos)
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -129,10 +128,6 @@ class Game:
                         # Playing the paper sound
                         play_sound(self.paper_sound)
                         return Game.run(self)
-                    if credits_button_infos["rect"].collidepoint(mouse_pos):
-                        # Playing the paper sound
-                        play_sound(self.paper_sound)
-                        return Game.credits_menu(self)
                     if quit_button_infos["rect"].collidepoint(mouse_pos):
                         # Playing the paper sound
                         play_sound(self.paper_sound)
@@ -260,30 +255,6 @@ class Game:
 
                                 self.player_turn = "X's"
             
-            self.screen.blit(pygame.transform.scale(self.game_surface, self.screen_infos["size"]), (0, 0))
-            pygame.display.update()
-            self.clock.tick(FPS)
-
-    def credits_menu(self):
-        render_paper(self.game_surface, self.screen_infos)
-
-        while True:
-
-            mouse_pos = pygame.mouse.get_pos()
-
-            back_button_infos = render_a_button(self.game_surface, "BACK", 0, self.screen_infos, mouse_pos, True)
-
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    # Checking if the back button has been clicked on
-                    if back_button_infos["rect"].collidepoint(mouse_pos):
-                        # Playing the paper sound
-                        play_sound(self.paper_sound)
-                        return Game.main_menu(self)
-
             self.screen.blit(pygame.transform.scale(self.game_surface, self.screen_infos["size"]), (0, 0))
             pygame.display.update()
             self.clock.tick(FPS)
