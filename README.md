@@ -6,7 +6,7 @@
 
 ***To anyone who might be reading this code:***
 
-*This is my first programming project outside of courses and algorithmic exercises. 
+*This was my first programming project outside of courses and algorithmic exercises. 
 The code is not well-written, and I am aware that there are many areas for improvement. 
 I appreciate your understanding and patience.*
 
