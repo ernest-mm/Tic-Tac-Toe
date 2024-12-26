@@ -1,4 +1,8 @@
-<center><h1></h1>Tic Tac Toe</h1></center>
+<div align="center">
+  <h1>
+    Tic Tac Toe
+  </h1>
+</div>
 
 ***To anyone who might be reading this code:***
 
