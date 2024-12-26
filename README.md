@@ -1,4 +1,4 @@
-# Tic Tac Toe
+<center><h1></h1>Tic Tac Toe</h1></center>
 
 ***To anyone who might be reading this code:***
 
@@ -13,10 +13,7 @@ I appreciate your understanding and patience.*
 ### In-Game
 ![In-Game](images/in_game.png)
 
-### Game Won
-![X has won](images/x_has_won.png)
-
-![O has won](images/o_has_won.png)
+### Game ending in a draw
 
 ![The game is a tie](images/the_game_is_a_tie.png)
 
@@ -28,7 +25,7 @@ I appreciate your understanding and patience.*
 
 ## Installation
 1. **Download the setup file**:
-    - Download the setup file from [here](path_to_your_setup_file).
+    - Download the setup file from [I WILL ADD THIS LINK LATER](path_to_your_setup_file).
 
 2. **Run the setup file**:
     - Double-click the setup file and follow the installation instructions.
