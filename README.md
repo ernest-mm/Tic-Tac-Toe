@@ -13,8 +13,12 @@ I appreciate your understanding and patience.*
 ### In-Game
 ![In-Game](images/in_game.png)
 
-### Game Over
-![Game Over](images/game_over.png)
+### Game Won
+![X has won](images/x_has_won.png)
+
+![O has won](images/o_has_won.png)
+
+![The game is a tie](images/the_game_is_a_tie.png)
 
 ## Features
 - **User-Friendly Interface**: Simple and intuitive paper like UI for easy gameplay.
