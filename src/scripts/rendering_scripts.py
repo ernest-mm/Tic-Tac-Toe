@@ -1,5 +1,4 @@
 import pygame
-import random
 from scripts.display_resolution import scaled_down
 from scripts.constants import *
 
