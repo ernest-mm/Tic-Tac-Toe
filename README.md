@@ -28,15 +28,22 @@ I appreciate your understanding and patience.*
 - **Winning Detection**: Automatically detects when a player wins or when the game ends in a draw.
 
 ## Installation
-1. **Download the setup file**:
-    - Download the setup file from [I WILL ADD THIS LINK LATER](path_to_your_setup_file).
 
-2. **Run the setup file**:
-    - Double-click the setup file and follow the installation instructions.
+### Requirements
+- Python 3.12.7 or higher
+- Pygame-ce 2.5.1 or higher
+- Git
 
-3. **Launch the game**:
-    - After installation, run the Tic Tac Toe game from the shortcut created on your desktop or start menu.
+```bash
+# Clone the repository
+git clone https://github.com/ernest-mm/Tic-Tac-Toe.git
 
+# Navigate to the project directory
+cd Tic-Tac-Toe
+
+# Run the game
+python src/main.py
+```
 ## How to Play:
   - The game board is a 3x3 grid.
   - Player 1 is 'X' and Player 2 is 'O'.
