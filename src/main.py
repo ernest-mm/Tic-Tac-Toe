@@ -12,7 +12,7 @@ class Game:
         pygame.init()
 
         self.screen_infos = get_screen_infos(DEVELOPMENT_RESOLUTION)
-        self.screen = pygame.display.set_mode(self.screen_infos["size"], pygame.SCALED + pygame.FULLSCREEN + pygame.NOFRAME)
+        self.screen = pygame.display.set_mode(self.screen_infos["size"], pygame.SCALED + pygame.NOFRAME)
         pygame.display.set_caption("Tic Tac Toe")
         self.clock = pygame.time.Clock()
         self.ICON = pygame.image.load("src/assets/images/ICON.png")
