@@ -7,7 +7,7 @@
 ***To anyone who might be reading this code:***
 
 *This was my first programming project outside of courses and algorithmic exercises. 
-The code is not well-written, and I am aware that there are many areas for improvement. 
+There are many areas for improvement. 
 I appreciate your understanding and patience.*
 
 ## Screenshots
@@ -31,19 +31,31 @@ I appreciate your understanding and patience.*
 
 ### Requirements
 - Python 3.12.7 or higher
-- Pygame-ce 2.5.1 or higher
+- Pip
 - Git
 
+### Clone the repository
 ```bash
-# Clone the repository
 git clone https://github.com/ernest-mm/Tic-Tac-Toe.git
+```
 
-# Navigate to the project directory
+or with SSH if you have it configured
+
+### Navigate to the project directory
+```bash
 cd Tic-Tac-Toe
+```
 
-# Run the game
+### Install the requirements
+```bash
+pip install -r requirements.txt
+```
+
+## Running the game
+```bash
 python src/main.py
 ```
+
 ## How to Play:
   - The game board is a 3x3 grid.
   - Player 1 is 'X' and Player 2 is 'O'.
